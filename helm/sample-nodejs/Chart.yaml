@@ -1,0 +1,15 @@
+apiVersion: v2
+name: sample-nodejs
+description: A Helm chart for the sample Node.js Express application with Prometheus metrics
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - nodejs
+  - express
+  - prometheus
+  - metrics
+maintainers:
+  - name: Your Name
+home: https://github.com/yourorg/sample-nodejs
+
