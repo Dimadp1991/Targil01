@@ -1,35 +1,19 @@
-# Use official Node.js runtime as base image
-FROM node:18-alpine
+FROM node:20-slim
 
-# Set working directory
-WORKDIR /app
+# 1. Set a specific working directory (prevents idealTree errors)
+WORKDIR /src
 
-# Copy package files
+# 2. Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# 3. Clean cache and install (overrides from package.json will apply here)
+RUN npm cache clean --force && npm install
 
-# Copy application code
-COPY app.js ./
+# 4. Copy the rest of the code
+COPY . .
 
-# Create non-root user for security
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
+# 5. Security Best Practice: Don't run as root
+USER node
 
-# Change ownership of app directory
-RUN chown -R nodejs:nodejs /app
-
-# Switch to non-root user
-USER nodejs
-
-# Expose port
-EXPOSE 8080
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:8080/live', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
-
-# Start the application
-CMD ["node", "app.js"]
-
+EXPOSE 4000
+CMD ["node", "src/app.js"]

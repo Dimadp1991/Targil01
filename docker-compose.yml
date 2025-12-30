@@ -1,0 +1,6 @@
+sample-nodejs:
+  image: sample-nodejs:latest
+  ports:
+    - "4000:4000"
+  environment:
+    - PORT=4000
